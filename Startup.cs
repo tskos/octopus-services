@@ -30,7 +30,7 @@ namespace OctopusServices
             {
                 // Add input formatter. This should be inserted at position 0 or else the normal json input
                 // formatter will take precedence.
-                opt.InputFormatters.Insert(0, new EnumerableStringInputFormatter());
+                opt.InputFormatters.Insert(0, new EnumerableStringInputFormatter("myWords"));
             });
         }
 

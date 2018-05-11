@@ -7,11 +7,17 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OctopusServices.Models;
+using System.Linq;
 
 public class EnumerableStringInputFormatter : TextInputFormatter
 {
-    public EnumerableStringInputFormatter()
+    private readonly string _arrayObjectKey;
+
+    public EnumerableStringInputFormatter(string arrayObjectKey)
     {
+        _arrayObjectKey = arrayObjectKey;
+
         // This formatter supports JSON.
         SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("application/json"));
         SupportedEncodings.Add(Encoding.UTF8);
@@ -20,7 +26,7 @@ public class EnumerableStringInputFormatter : TextInputFormatter
 
     protected override bool CanReadType(Type type)
     {
-        return typeof(IEnumerable<string>).IsAssignableFrom(type);
+        return typeof(IEnumerable<MyWord>).IsAssignableFrom(type);
     }
 
     public override Task<InputFormatterResult> ReadRequestBodyAsync(
@@ -39,15 +45,13 @@ public class EnumerableStringInputFormatter : TextInputFormatter
 
             try
             {
-                var myWordsKey = "myWords";
-
                 // Load the body and determine if it's an array or single object.
                 var token = JToken.Load(jsonReader);
-                if((token.Type == JTokenType.Object) && (token[myWordsKey] != null) &&
-                    (token[myWordsKey].Type == JTokenType.Array))
+                if((token.Type == JTokenType.Object) && (token[_arrayObjectKey] != null) &&
+                    (token[_arrayObjectKey].Type == JTokenType.Array))
                 {
-                    var myWordsArray = token[myWordsKey];
-                    var model = myWordsArray.ToObject<IEnumerable<string>>();
+                    var myWordsArray = token[_arrayObjectKey];
+                    var model = myWordsArray.Select(w => new MyWord(w.Value<string>())).ToList();
                     return InputFormatterResult.SuccessAsync(model);
                 }
             }
