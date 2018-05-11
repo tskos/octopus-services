@@ -40,6 +40,12 @@ namespace OctopusServices
             // Enable the Swagger UI middleware and the Swagger generator
             app.UseSwaggerUi(typeof(Startup).GetTypeInfo().Assembly, settings =>
             {
+                settings.SwaggerUiRoute = string.Empty;
+                settings.SwaggerRoute = "/swagger.json";
+                settings.PostProcess = (doc) => {
+                    doc.Info.Title = "Octopus Services";
+                };
+                
                 settings.GeneratorSettings.DefaultPropertyNameHandling =
                     PropertyNameHandling.Default;
             });

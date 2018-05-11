@@ -9,10 +9,10 @@ namespace OctopusServices.Controllers
     [Route("[controller]/[action]")]
     public class OctopusServicesController : Controller
     {
-        [HttpGet]
-        public ActionResult CountWordLengths()
+        [HttpPost]
+        public ActionResult CountWordLengths([FromBody]string body)
         {
-            return new JsonResult("test");
+            return new JsonResult(body);
         }
     }
 }
