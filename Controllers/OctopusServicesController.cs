@@ -15,11 +15,16 @@ namespace OctopusServices.Controllers
         {
             var myWordsKey = "myWords";
 
+            if (!(body.HasValues && body.ContainsKey(myWordsKey)))
+            {
+                return BadRequest();
+            }
+
             var results = body[myWordsKey]
                 .OrderBy(w => (string)w)
                 .Select(w => new { Word = (string)w, Count = ((string)w).Length });
 
-            return new JsonResult(new { Results = results });
+            return Ok(new { Results = results });
         }
     }
 }

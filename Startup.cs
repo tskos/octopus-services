@@ -36,6 +36,8 @@ namespace OctopusServices
             {
                 app.UseDeveloperExceptionPage();
             }
+            
+            app.UseStatusCodePages();
 
             // Enable the Swagger UI middleware and the Swagger generator
             app.UseSwaggerUi(typeof(Startup).GetTypeInfo().Assembly, settings =>
@@ -45,7 +47,7 @@ namespace OctopusServices
                 settings.PostProcess = (doc) => {
                     doc.Info.Title = "Octopus Services";
                 };
-                
+
                 settings.GeneratorSettings.DefaultPropertyNameHandling =
                     PropertyNameHandling.Default;
             });
