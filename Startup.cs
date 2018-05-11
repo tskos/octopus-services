@@ -26,7 +26,12 @@ namespace OctopusServices
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(opt =>
+            {
+                // Add input formatter. This should be inserted at position 0 or else the normal json input
+                // formatter will take precedence.
+                opt.InputFormatters.Insert(0, new EnumerableStringInputFormatter());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,7 +41,7 @@ namespace OctopusServices
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
             app.UseStatusCodePages();
 
             // Enable the Swagger UI middleware and the Swagger generator
@@ -44,7 +49,8 @@ namespace OctopusServices
             {
                 settings.SwaggerUiRoute = string.Empty;
                 settings.SwaggerRoute = "/swagger.json";
-                settings.PostProcess = (doc) => {
+                settings.PostProcess = (doc) =>
+                {
                     doc.Info.Title = "Octopus Services";
                 };
 
