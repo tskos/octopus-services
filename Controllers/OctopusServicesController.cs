@@ -11,14 +11,11 @@ namespace OctopusServices.Controllers
     public class OctopusServicesController : Controller
     {
         [HttpPost]
-        public ActionResult CountWordLengths([FromBody]IEnumerable<MyWord> words)
+        public ActionResult CountWordLengths([FromBody]MyWordsCollection myWords)
         {
-            if ((words == null) || !words.Any() || !ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            var results = words.OrderBy(w => w.Word);
+            if (!ModelState.IsValid) { return BadRequest("State is invalid!"); }
+            
+            var results = myWords.MyWords.Select(w => new { Word = w, Count = w.Length });
 
             return Ok(new { Results = results });
         }

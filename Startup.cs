@@ -26,12 +26,7 @@ namespace OctopusServices
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(opt =>
-            {
-                // Add input formatter. This should be inserted at position 0 or else the normal json input
-                // formatter will take precedence.
-                opt.InputFormatters.Insert(0, new EnumerableStringInputFormatter("myWords"));
-            });
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
